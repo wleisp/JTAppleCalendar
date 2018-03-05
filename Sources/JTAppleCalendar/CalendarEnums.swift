@@ -64,8 +64,8 @@ public enum ReadingOrientation {
 public enum ScrollingMode: Equatable {
     /// stopAtEachCalendarFrame - non-continuous scrolling that will stop at each frame
     case stopAtEachCalendarFrame
-    /// stopAtEachSection - non-continuous scrolling that will stop at each section
-    case stopAtEachSection
+    /// stopAtEachSection - non-continuous scrolling that will stop at each section with custom offset
+    case stopAtEachSection(customOffset: CGFloat)
     /// stopAtEach - non-continuous scrolling that will stop at each custom interval
     case stopAtEach(customInterval: CGFloat)
     /// nonStopToSection - continuous scrolling that will stop at a section

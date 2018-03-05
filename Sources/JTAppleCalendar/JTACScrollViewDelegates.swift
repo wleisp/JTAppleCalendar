@@ -88,7 +88,7 @@ extension JTACMonthView: UIScrollViewDelegate {
                                                     forward: { return ceil(theCurrentContentOffset / interval) * interval },
                                                     backward: { return floor(theCurrentContentOffset / interval) * interval})
             setTargetContentOffset(offset)
-        case .stopAtEachSection:
+        case .stopAtEachSection(let offset):
             let section = scrollDecision(currentScrollDirectionValue: translation,
                                                      previousScrollDirectionValue: lastMovedScrollDirection,
                                                      forward: { return theCurrentSection},
@@ -110,16 +110,16 @@ extension JTACMonthView: UIScrollViewDelegate {
                            previousScrollDirectionValue: lastMovedScrollDirection,
                            forward: {
                                 if theCurrentContentOffset >= snapForward || directionVelocity > 0 {
-                                    setTargetContentOffset(endOfCurrentSectionOffset)
+                                    setTargetContentOffset(endOfCurrentSectionOffset + offset)
                                 } else {
-                                    setTargetContentOffset(endOfPreviousSectionOffset)
+                                    setTargetContentOffset(endOfPreviousSectionOffset + offset)
                                 }
                            },
                            backward: {
                                 if theCurrentContentOffset <= snapForward || directionVelocity < 0 {
-                                    setTargetContentOffset(endOfPreviousSectionOffset)
+                                    setTargetContentOffset(endOfPreviousSectionOffset + offset)
                                 } else {
-                                    setTargetContentOffset(endOfCurrentSectionOffset)
+                                    setTargetContentOffset(endOfCurrentSectionOffset + offset)
                                 }
                            })
         case let .nonStopToCell(withResistance: resistance), let .nonStopToSection(withResistance: resistance):
