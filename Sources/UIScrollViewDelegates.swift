@@ -123,7 +123,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
                 setTargetContentOffset(scrollDirection == .horizontal ? targetContentOffset.pointee.x : targetContentOffset.pointee.y)
             #endif
             break
-        case .stopAtEachSection:
+        case .stopAtEachSection(let offset):
             var calculatedOffSet: CGFloat = 0
             if scrollDirection == .horizontal ||
                 (scrollDirection == .vertical && !calendarViewLayout.thereAreHeaders && _cachedConfiguration.generateOutDates == .tillEndOfGrid) {
@@ -146,7 +146,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
                     }
                 }
             }
-            setTargetContentOffset(calculatedOffSet)
+            setTargetContentOffset(calculatedOffSet + offset)
         case .nonStopToSection, .nonStopToCell, .nonStopTo:
             let diff = abs(theTargetContentOffset - contentOffset)
             let targetSection = calendarLayout.sectionFromOffset(theTargetContentOffset)

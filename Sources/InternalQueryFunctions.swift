@@ -388,54 +388,6 @@ extension JTAppleCalendarView {
         return retval
     }
     
-    func dateOwnerInfoFromPath(_ indexPath: IndexPath) -> (date: Date, owner: DateOwner)? { // Returns nil if date is out of scope
-        guard let monthIndex = monthMap[indexPath.section] else {
-            return nil
-        }
-        let monthData = monthInfo[monthIndex]
-        // Calculate the offset
-        let offSet: Int
-        var numberOfDaysToAddToOffset: Int = 0
-        switch monthData.sectionIndexMaps[indexPath.section]! {
-        case 0:
-            offSet = monthData.inDates
-        default:
-            offSet = 0
-            let currentSectionIndexMap = monthData.sectionIndexMaps[indexPath.section]!
-            numberOfDaysToAddToOffset = monthData.sections[0..<currentSectionIndexMap].reduce(0, +)
-            numberOfDaysToAddToOffset -= monthData.inDates
-        }
-        
-        var dayIndex = 0
-        var dateOwner: DateOwner = .thisMonth
-        let date: Date?
-        if indexPath.item >= offSet && indexPath.item + numberOfDaysToAddToOffset < monthData.numberOfDaysInMonth + offSet {
-            // This is a month date
-            dayIndex = monthData.startDayIndex + indexPath.item - offSet + numberOfDaysToAddToOffset
-            date = calendar.date(byAdding: .day, value: dayIndex, to: startOfMonthCache)
-        } else if indexPath.item < offSet {
-            // This is a preDate
-            dayIndex = indexPath.item - offSet  + monthData.startDayIndex
-            date = calendar.date(byAdding: .day, value: dayIndex, to: startOfMonthCache)
-            if date! < startOfMonthCache {
-                dateOwner = .previousMonthOutsideBoundary
-            } else {
-                dateOwner = .previousMonthWithinBoundary
-            }
-        } else {
-            // This is a postDate
-            dayIndex =  monthData.startDayIndex - offSet + indexPath.item + numberOfDaysToAddToOffset
-            date = calendar.date(byAdding: .day, value: dayIndex, to: startOfMonthCache)
-            if date! > endOfMonthCache {
-                dateOwner = .followingMonthOutsideBoundary
-            } else {
-                dateOwner = .followingMonthWithinBoundary
-            }
-        }
-        guard let validDate = date else { return nil }
-        return (validDate, dateOwner)
-    }
-    
     func datesAtCurrentOffset(_ offset: CGPoint? = nil) -> DateSegmentInfo {
         
         let rect: CGRect?
