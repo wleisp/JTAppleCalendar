@@ -85,7 +85,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
                                                     forward: { () -> CGFloat in return ceil(theCurrentContentOffset / interval) * interval },
                                                     backward: { () -> CGFloat in return floor(theCurrentContentOffset / interval) * interval})
             setTargetContentOffset(offset)
-        case .stopAtEachSection:
+        case .stopAtEachSection(let offset):
             let section = scrollDecision(currentScrollDirectionValue: translation,
                                                      previousScrollDirectionValue: lastMovedScrollDirection,
                                                      forward: { () -> Int in return theCurrentSection },
@@ -95,7 +95,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
             guard section >= 0, section < calendarLayout.sectionSize.count else {setTargetContentOffset(0); return}
 
             let calculatedOffset = calendarLayout.sectionSize[section]
-            setTargetContentOffset(calculatedOffset)
+            setTargetContentOffset(calculatedOffset + offset)
         case let .nonStopToCell(withResistance: resistance), let .nonStopToSection(withResistance: resistance):
             
             let (recalculatedOffset, elementProperties) = rectAfterApplying(resistance: resistance,
